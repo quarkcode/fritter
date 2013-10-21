@@ -1,0 +1,17 @@
+<!-- SIDEBAR -->
+<div id="sidebar">
+	<ul>
+			
+		<? if($_SESSION['user']->level > 1) { ?>
+			<li class="medium info btn icon-left icon-logout"><a href="/logout">Logout</a></li>
+			
+			<? if($_SESSION['user']->level>50) { ?>
+				<li class="medium info btn icon-left icon-users"><a href="/admin/users">Users</a></li>
+				<li class="medium info btn icon-left icon-tools"><a href="/admin/configs">Config</a></li>
+				<li class="medium info btn icon-left icon-database"><a href="/admin/modules">Modules</a></li>
+				<!-- SIDEBAR OPTIONS-->
+			<? } ?>
+			
+		<? } ?>
+	</ul>
+</div>

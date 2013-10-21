@@ -1,0 +1,52 @@
+<? $web = new web((object) array( 	
+													"title" => "Register",
+													"meta_description" => "Register",
+													"model" => "user",
+													"control" => "user",
+													"theme" => "admin",
+													"level" => 0 
+												)); ?>
+															
+<h1>Register</h1>
+
+<? if($web->webAction != "saved") { ?>
+		
+	<form id="webForm" enctype="multipart/form-data" method="post">
+		
+		<input type="hidden" id="id" name="id" value="<?=$user->id?>" />
+	
+		<p class="field">
+			<label><?=$web->t('Name')?></label>
+			<input type="text" id="name" name="name" value="<?=$user->name?>" class="text input" />
+		</p>
+		
+		<p class="field">
+			<label><?=$web->t('E-mail')?></label>
+			<input type="text" id="email" name="email" value="<?=$user->email?>" class="text input" />
+		</p>
+		
+		<p class="field">
+			<label><?=$web->t('Password')?></label>
+			<input type="password" id="pass" name="pass" value="" class="text input" />
+		</p>
+	
+		<p class="field">
+			<label><?=$web->t('Repeat Password')?></label>
+			<input type="password" id="rpass" name="rpass" value="" class="text input" />
+		</p>
+	
+		<input type="hidden" id="webAction" name="webAction" value="register" />
+		<input type="hidden" id="webObject" name="webObject" value="user" />
+		
+		<div class="small default btn"><a href="/login"><?=$web->t('Sign in')?></a></div>
+		<div class="medium danger icon-right icon-forward btn entypo" style="float: right"><a href="#" onclick="$('#webForm').submit();" ><?=$web->t("submit") ?></a></div>
+	
+		<script><?=$web->JSwindow() ?></script>
+		
+	</form>
+	
+<? } else { ?>
+	
+	<?= $web->message;?>
+	
+<? }?>

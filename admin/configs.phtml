@@ -1,0 +1,45 @@
+<? $web = new web((object) array(	
+													"page_title" => "Configuration",
+													"model" => "config",
+													"control" => "config",
+													"theme" => ((!$_POST)?'admin':'blank'),
+													"level" => 100
+												)); ?>
+													
+<h1 class="webTitle">
+	<?=$web->t("configs") ?>
+	<div class="small default btn icon-left entypo icon-plus"><a href="#" onclick="webWindowLoad('config',0);" ><?=$web->t("Add") ?></a></div>
+	<div class="small default btn icon-left entypo icon-search"><a href="#" onclick="webFiltersToggle();" ><?=$web->t("Filters") ?></a></div>
+</h1>
+
+<? $web->filterBy(  json_decode('{
+												"name": { "type": "text", "default": "", "value": "'.$config->name.'" },
+												"value": { "type": "text", "default": "", "value": "'.$config->value.'" }
+											}') );  ?>
+
+<table class="striped">
+	
+	<thead>
+		<tr>
+			<th><?=$web->t("name"); $web->orderBy("name"); ?></th>
+			<th><?=$web->t("value"); $web->orderBy("value"); ?></th>
+			<th style="width: 150px;"></th>
+		</tr>
+	</thead>
+	
+	<tbody>
+		<? foreach( $configs as $config ) { ?>
+			<tr>
+				<td><?=$config->name?></td>
+				<td><?=$config->value?></td>
+				<td>
+					<div class="small info btn icon-left entypo icon-pencil"><a href="javascript: webWindowLoad('config','<?=$config->id?>');" ><?=$web->t("Edit")?></a></div>
+					<div class="small info btn icon-left entypo icon-trash"><a href="javascript: webRemove('config','<?=$config->id?>');" ><?=$web->t("Delete")?></a></div>
+				</td>
+			</tr>
+		<? }?>
+	</tbody>
+
+</table>
+
+<? $web->pagination( $web->config ); ?>

@@ -1,0 +1,51 @@
+{
+    "inputs": {
+        "name2": {
+            "type": "text",
+            "list": true,
+            "filter": true
+        },
+        "email2": {
+            "type": "text",
+            "list": true,
+            "filter": true
+        },
+        "user2": {
+            "type": "text",
+            "list": true,
+            "filter": true
+        },
+        "password2": {
+            "type": "password"
+        },
+        "active2": {
+            "type": "checkbox",
+            "list": true,
+            "filter": true
+        },
+        "level2": {
+            "type": "select",
+            "value": {
+                "": "",
+                "10": "guest",
+                "50": "user",
+                "100": "admin"
+            },
+            "list": true,
+            "filter": true
+        },
+        "comments2": {
+            "type": "textarea"
+        },
+        "date_registration2": {
+            "type": "date",
+            "list": true
+        },
+        "imagen2": {
+            "type": "image"
+        },
+        "attach2": {
+            "type": "attach"
+        }
+    }
+}

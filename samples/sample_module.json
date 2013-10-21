@@ -1,0 +1,65 @@
+{
+    "inputs": {
+        "name": {
+            "type": "text",
+            "list": true,
+            "filter": true
+        },
+        "email": {
+            "type": "text",
+            "list": true,
+            "filter": true
+        },
+        "user": {
+            "type": "text",
+            "list": true,
+            "filter": true
+        },
+        "password": {
+            "type": "password"
+        },
+        "active": {
+            "type": "checkbox",
+            "list": true,
+            "filter": true
+        },
+        "level": {
+            "type": "select",
+            "value": {
+                "": "",
+                "10": "guest",
+                "50": "user",
+                "100": "admin"
+            },
+            "list": true,
+            "filter": true
+        },
+        "comments": {
+            "type": "textarea"
+        },
+        "description": {
+            "type": "wysiwyg"
+        },
+        "description2": {
+            "type": "wysiwyg"
+        },
+        "date_registration": {
+            "type": "date",
+            "list": true
+        },
+        "imagen": {
+            "type": "image"
+        },
+        "attach": {
+            "type": "attach"
+        },
+        "gallery": {
+            "type": "gallery"
+        }
+    },
+    "title": "test",
+    "rows_size": 10,
+    "table": "test",
+    "image_size": 500,
+    "thumb_size": 150
+}

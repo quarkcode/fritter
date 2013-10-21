@@ -1,0 +1,246 @@
+<? 
+
+	if($_POST){
+
+		if($_POST['wadmin']=="1"){
+				
+			$auxConfig = new stdClass();
+			$auxConfig->code = uniqid().date('dmyhi');
+			$auxConfig->noindexnofollow = "true";
+			$auxConfig->mysql_prefix = $_POST['dbprefix'];
+			$auxConfig->mysql_db = $_POST['dbname'];
+			$auxConfig->mysql_host = $_POST['dbhost'];
+			$auxConfig->mysql_username = $_POST['dbuser'];
+			$auxConfig->mysql_password = $_POST['dbpass'];
+			$auxConfig->mail_host = $_POST['mailhost'];
+			$auxConfig->mail_username = $_POST['mailuser'];
+			$auxConfig->mail_password = $_POST['mailpass'];
+			$auxConfig->mail_from = $_POST['mainfrom'];
+			$auxConfig->mail_fromname = $_POST['mailfname'];
+			
+			$fp = fopen('config.json', 'w');
+			fwrite($fp, json_encode($auxConfig));
+			fclose($fp);			
+			
+			#CONECTO BD
+			include 'libs/db.php';
+  			$db = new DB(	$auxConfig->mysql_db, 
+						  			$auxConfig->mysql_host, 
+						  			$auxConfig->mysql_username, 
+						  			$auxConfig->mysql_password);	
+										
+			#PARSEO SQL
+			$Tconfig = "
+			CREATE TABLE IF NOT EXISTS `{prefix}config` (
+			  `id` int(12) NOT NULL AUTO_INCREMENT,
+			  `name` text NOT NULL,
+			  `value` text NOT NULL,
+			  PRIMARY KEY (`id`)
+			);
+			";
+			$Tconfig = stripslashes(str_replace("{prefix}", $auxConfig->mysql_prefix, $Tconfig));
+			$db->execute($Tconfig);
+			
+			$Tmodule = "
+			CREATE TABLE IF NOT EXISTS `{prefix}module` (
+			  `id` int(12) NOT NULL AUTO_INCREMENT,
+			  `name` varchar(32) NOT NULL,
+			  `data` text NOT NULL,
+			  PRIMARY KEY (`id`)
+			);
+			";
+			$Tmodule = stripslashes(str_replace("{prefix}", $auxConfig->mysql_prefix, $Tmodule));
+			$db->execute($Tmodule);
+			
+			$Ttranslation = "
+			CREATE TABLE IF NOT EXISTS `{prefix}translation` (
+			  `id` varchar(32) NOT NULL,
+			  `language` varchar(2) NOT NULL,
+			  `texto` text,
+			  PRIMARY KEY (`id`,`language`)
+			);
+			";
+			$Ttranslation = stripslashes(str_replace("{prefix}", $auxConfig->mysql_prefix, $Ttranslation));
+			$db->execute($Ttranslation);
+			
+			$Tuser = "
+			CREATE TABLE IF NOT EXISTS `{prefix}user` (
+			  `id` int(12) NOT NULL AUTO_INCREMENT,
+			  `name` varchar(255) CHARACTER SET latin1 COLLATE latin1_spanish_ci NOT NULL,
+			  `email` varchar(255) CHARACTER SET latin1 COLLATE latin1_spanish_ci NOT NULL,
+			  `user` varchar(30) CHARACTER SET latin1 COLLATE latin1_spanish_ci DEFAULT NULL,
+			  `pass` varchar(255) CHARACTER SET latin1 COLLATE latin1_spanish_ci NOT NULL,
+			  `level` int(12) NOT NULL DEFAULT '0',
+			  `date_registration` timestamp NULL DEFAULT NULL,
+			  `date_last` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+			  `date_lastpass` timestamp NULL DEFAULT NULL,
+			  `login_attempts` int(1) unsigned DEFAULT '0',
+			  `login_count` int(12) NOT NULL,
+			  `login_ip` varchar(18) CHARACTER SET latin1 COLLATE latin1_spanish_ci DEFAULT '0.0.0.0',
+			  `active` int(1) DEFAULT NULL,
+			  `comments` text NOT NULL,
+			  PRIMARY KEY (`id`)
+			);
+			";
+			$Tuser = stripslashes(str_replace("{prefix}", $auxConfig->mysql_prefix, $Tuser));
+			$db->execute($Tuser);
+
+			#INSERTO DATOS
+			$q = "INSERT INTO `".$auxConfig->mysql_prefix."config` (`id`, `name`, `value`) VALUES
+						(1, 'login_expires', '9999'),
+						(2, 'login_attempts', '10'),
+						(3, 'web_name', '".$_POST['webname']."'),
+						(4, 'meta_keywords', '".$_POST['webdesc']."'),
+						(5, 'meta_description', '".$_POST['webkeys']."');";
+			$db->execute($q);
+
+			#INSERTO USUARIO ADMIN
+			$pass = encrypt("admin",$auxConfig->code);
+			$q = "INSERT INTO `".$auxConfig->mysql_prefix."user` (`id`, `name`, `email`, `user`, `pass`, `level`, `date_registration`, `date_last`, `date_lastpass`, `login_attempts`, `login_count`, `login_ip`, `active`, `comments`) 
+			    VALUES (NULL, 'administrator', 'mjordan@malabars.com', 'admin', '".$pass."', '100', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '0', '0', '0.0.0.0', '1', '');";
+			$db->execute($q);
+				 			
+			#CREO EL JSON CON LA CONFIGURACION
+			$fp = fopen('config.json', 'w');
+			fwrite($fp, json_encode($auxConfig));
+			fclose($fp);
+			
+			unlink(RELPATH."install.phtml");
+				
+		} else {
+			
+			# recursively remove a directory
+			function rrmdir($dir) {
+			    $files = glob( $dir . '*', GLOB_MARK );
+				if($files){
+				    foreach( $files as $file ){
+				        if( substr( $file, -1 ) == '/' )
+				            rrmdir( $file );
+				        else
+				            @unlink( $file );
+				    }
+				}
+			    @rmdir( $dir );
+			} 
+	
+			#DELETE DE ARCHIVOS PARA WITHOUT ADMIN:
+			unlink(RELPATH."css/style.admin.css");
+			unlink(RELPATH."js/functions.admin.js");
+			unlink(RELPATH."login.phtml");
+			unlink(RELPATH."logout.phtml");
+			unlink(RELPATH."install.phtml");
+			unlink(RELPATH."upload/.htaccess");
+			unlink("libs/db.php");
+			unlink("libs/modules.php");
+			
+			rrmdir(RELPATH."admin");
+			rrmdir(RELPATH."upload");
+			rrmdir(RELPATH."fonts");
+			rrmdir(RELPATH."themes/admin");
+			rrmdir(RELPATH."js/jwysiwyg");
+			rrmdir("controllers");
+			rrmdir("models");
+			rrmdir("libs/phpmailer");
+			
+			$auxConfig = new stdClass();
+			$auxConfig->webname = $_POST['webname'];
+			$auxConfig->description = $_POST['webdesc'];
+			$auxConfig->keywords = $_POST['webkeys'];
+			
+			#CREO EL JSON CON LA CONFIGURACION
+			$fp = fopen('config.json', 'w');
+			fwrite($fp, json_encode($auxConfig));
+			fclose($fp);				
+			
+		}
+
+		header("Location: /");
+		
+	}
+
+	$web = new web((object) array( 	
+													"page_title" => "Install",
+													"theme" => "admin",
+													"level" => 0 
+												)); 
+
+?>
+													
+	
+	<h1>INSTALL</h1>
+
+   <form action="/install" method="post" id="InstallForm">
+   	
+   		<p class="field"> 
+			<label>Web name:</label>   
+	       	<input type="input" name="webname" id="webname" class="input text"  />
+       	</p>
+   		<p class="field"> 
+			<label>Description:</label>   
+	       	<input type="input" name="webdesc" id="webdesc" class="input text" />
+       	</p>
+   		<p class="field"> 
+			<label>Keywords:</label>   
+	       	<input type="input" name="webkeys" id="webkeys" class="input text" />
+       	</p>
+       	
+   		<p class="field">    
+   			<label class="">
+   				<input type="checkbox" onclick="$('#mysql').toggle(300)" name="wadmin" id="wadmin" class="input text"  value="1"/>
+   				with Administration (Users, login, mail, modules, etc..) <span></span>
+   			</label>   
+       	</p>
+       	
+       	<div id="mysql" style="display: none;">
+       		
+			<h2>MYSQL</h2>
+			
+	   		<p class="field">
+				<label>Host</label>        	
+		       	<input type="text" name="dbhost" id="dbhost" class="input text" value="localhost" />
+	       	</p>
+	   		<p class="field">
+				<label>User</label>        	
+		       	<input type="text" name="dbuser" id="dbuser" class="input text" />
+	       	</p>
+	   		<p class="field">
+				<label>Password</label>        	
+		       	<input type="text" name="dbpass" id="dbpass" class="input text" />
+	       	</p>
+	   		<p class="field">
+				<label>DB Name</label>        	
+		       	<input type="text" name="dbname" id="dbname" class="input text" />
+	       	</p>
+	   		<p class="field">
+				<label>Prefix</label>        	
+		       	<input type="text" name="dbprefix" id="dbprefix" class="input text" />
+	       	</p>
+
+			<h2>MAIL</h2>
+			
+	   		<p class="field">
+				<label>Host</label>        	
+		       	<input type="text" name="mailhost" id="mailhost" class="input text" />
+	       	</p>
+	   		<p class="field">
+				<label>User</label>        	
+		       	<input type="text" name="mailuser" id="mailuser" class="input text" />
+	       	</p>
+	   		<p class="field">
+				<label>Password</label>        	
+		       	<input type="text" name="mailpass" id="mailpass" class="input text" />
+	       	</p>
+	   		<p class="field">
+				<label>From E-mail</label>        	
+		       	<input type="text" name="mainfrom" id="mainfrom" class="input text" />
+	       	</p>
+	   		<p class="field">
+				<label>From Name</label>        	
+		       	<input type="text" name="mailfname" id="mailfname" class="input text" />
+	       	</p>
+	       	
+       	</div>
+       	
+		<div class="medium danger btn entypo"><a href="#" onclick="$('#InstallForm').submit();" > Install >> </a></div>
+
+    </form>

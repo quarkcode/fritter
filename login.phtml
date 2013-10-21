@@ -1,0 +1,44 @@
+<? $web = new web((object) array( 	
+													"page_title" => "Login",
+													"meta_description" => "Login access panel",
+													"meta_keywords" => "login, form, log in, enter, access",
+													"theme" => "admin",
+													"level" => 0,
+													"control" => "user"
+												)); ?>
+														
+	<h1 class="webTitle">
+		<?=$web->t("login") ?>
+	</h1>
+
+	<? if(!$web->logged) {?>
+		
+	   <form action="" method="post" id="loginForm">
+	   	
+	   		<p class="field">
+				<label><?=$web->t('User')?></label>        	
+		       	<input type="text" name="user" id="user" class="input text" />
+	       	</p>
+	       	
+	   		<p class="field">
+				<label><?=$web->t('Password')?></label>        	
+		   		<input type="password" name="pass" id="pass"  class="input text"  />
+	       	</p>
+	       	
+	       	<input type="hidden" name="webAction" id="login" value="login" />
+	       	
+			<div class="small default btn"><a href="/admin/forgoten-password"><?=$web->t('Forgoten password')?></a></div>
+			
+			<div class="small default btn"><a href="/admin/register"><?=$web->t('Sign up')?></a></div>
+			
+			<div class="medium danger icon-right icon-forward btn entypo" style="float: right">
+				<a href="#" onclick="$('#loginForm').submit();" ><?=$web->t("submit") ?></a>
+			</div>
+
+	    </form>
+	    
+	<? } else { ?> 
+		
+		<h1><?=$web->t("You are logged in") ?></h1>
+		
+	<? } ?>

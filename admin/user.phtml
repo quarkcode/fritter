@@ -1,0 +1,158 @@
+<? $web = new web((object) array(  
+													"model" => "user",
+													"control" => "user",
+													"theme" => "blank",
+													"level" => 100
+												)); ?>
+	
+<h2><?=$web->t('USER')?></h2>
+
+<form id="webForm" enctype="multipart/form-data" method="post">
+	
+	<input type="hidden" id="id" name="id" value="<?=$user->id?>" />
+
+	<p class="field">
+		<label><?=$web->t('Name')?></label>
+		<input type="text" id="name" name="name" value="<?=$user->name?>" class="text input" />
+	</p>
+	
+	<p class="field">
+		<label><?=$web->t('E-mail')?></label>
+		<input type="text" id="email" name="email" value="<?=$user->email?>" class="text input" />
+	</p>
+	
+	<p class="field">
+		<label><?=$web->t('User name')?></label>
+		<input type="text" id="user" name="user" value="<?=$user->user?>" class="text input" />
+	</p>
+
+	<p class="field">
+		<label><?=$web->t('Password')?></label>
+		<input type="password" id="pass" name="pass" value="" class="text input" />
+	</p>
+
+	<p class="field">
+		<label class=""><?=$web->t('Active')?> <span></span><input type="checkbox" id="active" <?=$web->INPUT_checked($user->active) ?> name="active" value="1" /></label>
+		
+	</p>
+
+	<p class="field">
+		<label>
+			<?=$web->t('Image')?> 
+			<span id="user_imagen" class="light label"></span>
+			<span class="small info btn icon-left entypo icon-doc-text"><a href="#" onclick="$('#imagen').click();" ><?=$web->t("select file") ?></a></span>
+		</label>
+		<? $web->image("user_imagen",$user->id) ?>
+		<span class="hidden"><input type="file" id="imagen" name="imagen" /></span>
+		<script>$('#imagen').on("change", function(){ $('#user_imagen').html($('#imagen').val()); });</script>
+	</p>
+	
+	<p class="field">
+		<label>
+			<?=$web->t('Gallery')?> 
+			<span id="user_gallery" class="light label"></span>
+			<span class="small info btn icon-left entypo icon-doc-text"><a href="#" onclick="$('#gallery').click(); return false;" ><?=$web->t("select file") ?></a></span>
+			<span class="small info btn icon-left entypo icon-up entypo"><a href="#" class="webSubmit" ><?=$web->t("upload") ?></a></span>
+		</label>
+		<? $web->gallery("user_gallery",$user->id) ?>
+		<span class="hidden"><input type="file" id="gallery" name="gallery" /></span>
+		<script>$('#gallery').on("change", function(){ $('#user_gallery').html($('#gallery').val()); });</script>
+	</p>
+	
+	<p class="field">
+		<label>
+			<?=$web->t('Attach')?> 
+			<span id="user_attach" class="light label"></span>
+			<span class="small info btn icon-left entypo icon-doc-text"><a href="#" onclick="$('#attach').click();" ><?=$web->t("select file") ?></a></span>
+		</label>
+		<? $web->download("user_attach",$user->id) ?>
+		<span class="hidden"><input type="file" id="attach" name="attach" /></span>
+		<script>$('#attach').on("change", function(){ $('#user_attach').html($('#attach').val()); });</script>
+	</p>
+	
+	<p class="field">
+		<label><?=$web->t('Date registration')?></label>
+		<input type="text" id="date_registration" name="date_registration" value="<?=$user->date_registration?>" class="text input" />
+		<script> $(function() { $( "#date_registration" ).datepicker({ dateFormat: "dd-mm-yy" }); }); </script>
+	</p>
+	
+	<div class="field">
+		<label><?=$web->t('Level')?></label>
+		<div class="picker">
+			<select id="level" name="level" >
+				<option value="10" <?=$web->INPUT_selected($user->level, "10") ?>><?=$web->t('Guest')?></option>
+				<option value="50" <?=$web->INPUT_selected($user->level, "50") ?>><?=$web->t('User')?></option>
+				<option value="100" <?=$web->INPUT_selected($user->level, "100") ?>><?=$web->t('Admin')?></option>
+			</select>
+		</div>
+	</div>
+
+	<p class="field">
+		<label><?=$web->t('Comments')?></label>
+		<textarea rows="3" placeholder="Textarea" id="comments" name="comments" class="input textarea"><?=$user->comments?></textarea>
+	</p>
+	
+	<p class="field">
+		<label><?=$web->t('Comments')?></label>
+		<textarea rows="3" placeholder="Textarea" id="comments2" name="comments2" ><?=$user->comments?></textarea>
+	</p>
+
+	<input type="hidden" id="webAction" name="webAction" value="<?=$web->webAction?>" />
+	<input type="hidden" id="webObject" name="webObject" value="user" />
+	
+	<div class="medium danger icon-right icon-forward btn entypo" style="float: right"><a href="#" class="webSubmit" ><?=$web->t("save") ?></a></div>
+
+</form>
+
+<i class="icon-cancel webButtonClose" onclick="webWindowClose()"></i>
+
+<script src="/js/jwysiwyg/jwysiwyg.js" type="text/javascript"></script>
+<script src="/js/jwysiwyg/wysiwyg.image.js" type="text/javascript"></script>
+<script src="/js/jwysiwyg/wysiwyg.link.js" type="text/javascript"></script>
+<script src="/js/jwysiwyg/wysiwyg.table.js" type="text/javascript"></script>
+<script type="text/javascript">
+(function($) {
+	$(document).ready(function() {
+		$('#comments2').wysiwyg({
+		  controls: {
+			bold          : { visible : true },
+			italic        : { visible : true },
+			underline     : { visible : true },
+			strikeThrough : { visible : true },
+			
+			justifyLeft   : { visible : true },
+			justifyCenter : { visible : true },
+			justifyRight  : { visible : true },
+			justifyFull   : { visible : false },
+
+			indent  : { visible : false },
+			outdent : { visible : false },
+
+			code : { visible: false },
+			insertTable : { visible: false },
+			subscript   : { visible : false },
+			superscript : { visible : false },
+			
+			undo : { visible : true },
+			redo : { visible : true },
+			insertOrderedList    : { visible : false },
+			insertUnorderedList  : { visible : false },
+			insertHorizontalRule : { visible : false },
+
+			h1   : { visible : false },
+			h2   : { visible : false },
+			h3   : { visible : false },
+
+			cut   : { visible : true },
+			copy  : { visible : true },
+			paste : { visible : true },
+			html  : { visible: true },
+			
+			increaseFontSize : { visible : true },
+			decreaseFontSize : { visible : true },
+			exam_html: { visible: false }
+		  }
+		});
+	});
+})(jQuery);
+</script>

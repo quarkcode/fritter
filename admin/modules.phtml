@@ -1,0 +1,46 @@
+<?  $web = new web((object) array(	
+													"page_title" => "Modules",
+													"control" => "module",
+													"theme" => "admin",
+													"level" => 100
+												)); ?>
+													
+<h1 class="webTitle"><?=$web->t("modules") ?></h1>
+
+<table class="webTableList">
+	
+	<thead>
+		<tr>
+			<th>id</th>
+			<th><?=$web->t("name") ?></th>
+			<th></th>
+		</tr>
+	</thead>
+	
+	<tbody>
+		<? 
+			$modules = array();
+			$aux_query = $web->db->query("SELECT * FROM ".$web->settings->mysql_prefix . "module` ");
+			while ($data = $web->db->fetchNextObject($aux_query)) 
+				array_push($modules, $data);
+
+			foreach( $modules as $module ) { ?>
+			<tr>
+				<td><?=$module->id?></td>
+				<td><a href="/admin/<?=$module->name?>s"><?=$module->name?></a></td>
+				<td>
+					<a href="javascript: $('#id').attr('value','<?=$module->id?>'); $('#webAction').attr('value','add');  $('#webForm').submit(); " class="webButtonDelete"><?=$web->t("Add fields") ?></a>
+					<a href="javascript: $('#id').attr('value','<?=$module->id?>'); $('#webAction').attr('value','delete');  $('#webForm').submit(); " class="webButtonDelete"><?=$web->t("Delete") ?></a>
+				</td>
+			</tr>
+		<? }?>
+	</tbody>
+
+</table>
+
+<form id="webForm" enctype="multipart/form-data" method="post">
+	<input type="file" id="data" name="data" />
+	<input type="hidden" id="id" name="id" value="" />
+	<input type="hidden" id="webAction" name="webAction" value="save" />
+	<input type="button" value="<?=$web->t("Add") ?>" id="webAdd" onclick="$('#webForm').submit();" />
+</form>

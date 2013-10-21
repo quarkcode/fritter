@@ -1,0 +1,32 @@
+<? $web = new web((object) array(  
+													"model" => "config",
+													"control" => "config",
+													"theme" => "blank",
+													"level" => 100
+												)); ?>
+	
+<h2><?=$config->name?></h2>
+
+<form id="webForm" enctype="multipart/form-data" method="post">
+	
+	<input type="hidden" id="id" name="id" value="<?=$config->id?>" />
+
+	<p class="field">
+		<label><?=$web->t("name")?></label>
+		<input type="text" id="name" name="name" value="<?=$config->name?>" class="text input" />
+	</p>
+	
+	<p class="field">
+		<label><?=$web->t("value")?></label>
+		<input type="text" id="value" name="value" value="<?=$config->value?>" class="text input" />
+	</p>
+
+	<input type="hidden" id="webAction" name="webAction" value="<?=$web->webAction?>" />
+	<input type="hidden" id="webObject" name="webObject" value="config" />
+	
+	<div class="medium danger icon-right icon-forward btn entypo" style="float: right"><a href="#" class="webSubmit" ><?=$web->t("save") ?></a></div>
+	
+</form>
+
+<i class="icon-cancel webButtonClose" onclick="webWindowClose()"></i>
+

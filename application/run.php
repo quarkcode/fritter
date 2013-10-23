@@ -39,7 +39,8 @@
 			
 	}
 	
-	if(is_null($web)) header("Location: /error/404");
+	/* PAGE NOT FOUND ?? */
+	if( !is_object($web) ) header("Location: /error/404");
 	
 	$web->launch();
 	

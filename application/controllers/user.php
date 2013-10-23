@@ -29,27 +29,12 @@
 							$_SESSION['user']->pass = null;
 							$_SESSION['settings']->logged = true;
 								
-							if($diferenciaDias >= $this->config('login_expires')) {
-								 
-								$_SESSION['expired_pass'] = true;
-								$this->javascript .= $this->JSshowMessage("Error: User expires.", "danger");
-								header("Location: /admin/account");
-								
-							} else {
-			
-								$this->db->execute("UPDATE  ".$this->settings->mysql_prefix."user SET  login_attempts=0, date_last = NOW(), login_count = ".($user->login_count+1)." WHERE id=".$user->id);
-								$_SESSION['expired_pass'] = false;
-								header("Location: /");
-		
-							}
-							$noLogin = true;
-								
 						} else {
 		
 							$this->javascript .= $this->JSshowMessage("Error: Username or password.", "danger");
 												 
 							$nIntentos = ($user->login_attempts + 1);
-							if($nIntentos > $this->config('web_login_attempts')) {
+							if($nIntentos > $this->config('login_attempts')) {
 								$this->db->execute("UPDATE  ".$this->settings->mysql_prefix."user SET login_attempts=".$nIntentos.", active='N' WHERE id=".$user->id);
 							} else {
 								$this->db->execute("UPDATE  ".$this->settings->mysql_prefix."user SET  login_attempts=".$nIntentos." WHERE id=".$user->id);

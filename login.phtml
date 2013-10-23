@@ -11,7 +11,7 @@
 		<?=$web->t("login") ?>
 	</h1>
 
-	<? if(!$web->logged) {?>
+	<? if(!is_object($_SESSION['user'])) {?>
 		
 	   <form action="" method="post" id="loginForm">
 	   	

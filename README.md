@@ -53,12 +53,12 @@ Back-end in php, jquery and gumby framework to make easy create dynamical web si
 
 	+ Testing IE7+, Safari, Chrome, Opera ...
 	+ Integrar el cambio de idioma.
-	+ Como crear un theme/plantilla
-	+ Como crear paginas
-	+ Como añadir layouts
-	+ Como crear un modulo con JSON
-	+ Como añadir campos a un modulos con JSON
-	+ Gestion de configuraciones del administrador
+	+ Doc: Como crear un theme/plantilla
+	+ Doc: Como crear paginas
+	+ Doc: Como añadir layouts
+	+ Doc: Como crear un modulo con JSON
+	+ Doc: Como añadir campos a un modulos con JSON
+	+ Doc: Gestion de configuraciones del administrador
 	
 
 # THANKS TO
